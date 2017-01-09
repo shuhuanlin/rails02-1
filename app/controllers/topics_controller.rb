@@ -4,7 +4,7 @@ class TopicsController < ApplicationController
   # GET /topics
   # GET /topics.json
   def index
-    @topics = Topic.all
+    @topics = Topic.all.sort_by{|topic| topic.votes.count}.reverse
   end
 
   # GET /topics/1
@@ -26,39 +26,29 @@ class TopicsController < ApplicationController
   def create
     @topic = Topic.new(topic_params)
 
-    respond_to do |format|
       if @topic.save
-        format.html { redirect_to @topic, notice: 'Topic was successfully created.' }
-        format.json { render :show, status: :created, location: @topic }
+        redirect_to topics_path, notice: 'Topic was successfully created.'
       else
-        format.html { render :new }
-        format.json { render json: @topic.errors, status: :unprocessable_entity }
+        render :new
       end
-    end
   end
 
   # PATCH/PUT /topics/1
   # PATCH/PUT /topics/1.json
   def update
-    respond_to do |format|
       if @topic.update(topic_params)
-        format.html { redirect_to @topic, notice: 'Topic was successfully updated.' }
-        format.json { render :show, status: :ok, location: @topic }
+        redirect_to topics_path, notice: 'Topic was successfully updated.'
       else
-        format.html { render :edit }
-        format.json { render json: @topic.errors, status: :unprocessable_entity }
+        render :edit
       end
-    end
   end
 
   # DELETE /topics/1
   # DELETE /topics/1.json
   def destroy
     @topic.destroy
-    respond_to do |format|
-      format.html { redirect_to topics_url, notice: 'Topic was successfully destroyed.' }
-      format.json { head :no_content }
-    end
+      redirect_to topics_path, notice: 'Topic was successfully destroyed.'
+
   end
 
   def upvote

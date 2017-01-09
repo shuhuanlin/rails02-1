@@ -1,3 +1,3 @@
 class Vote < ApplicationRecord
-  belogs_to :topic
+  belongs_to :topic
 end
